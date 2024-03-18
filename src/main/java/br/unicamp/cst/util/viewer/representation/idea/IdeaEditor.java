@@ -81,12 +81,14 @@ public class IdeaEditor extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mCloseEdit = new javax.swing.JMenuItem();
         jToolBar1 = new javax.swing.JToolBar();
         zoom_in = new javax.swing.JButton();
         zoom_out = new javax.swing.JButton();
         search = new javax.swing.JButton();
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         mLoad = new javax.swing.JMenuItem();
@@ -94,6 +96,13 @@ public class IdeaEditor extends javax.swing.JFrame {
         mClose = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         mEdit = new javax.swing.JMenuItem();
+
+        mCloseEdit.setText("Close Editor");
+        mCloseEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mCloseEditActionPerformed(evt);
+            }
+        });
 
         jToolBar1.setRollover(true);
 
@@ -130,11 +139,13 @@ public class IdeaEditor extends javax.swing.JFrame {
         });
         jToolBar1.add(search);
 
+        jPanel1.setMinimumSize(new java.awt.Dimension(200, 0));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 310, Short.MAX_VALUE)
+            .addGap(0, 403, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,6 +153,22 @@ public class IdeaEditor extends javax.swing.JFrame {
         );
 
         jSplitPane1.setRightComponent(jPanel1);
+
+        jPanel2.setMinimumSize(new java.awt.Dimension(200, 100));
+        jPanel2.setPreferredSize(new java.awt.Dimension(100, 477));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 477, Short.MAX_VALUE)
+        );
+
+        jSplitPane1.setLeftComponent(jPanel2);
 
         jMenu1.setText("File");
 
@@ -189,10 +216,10 @@ public class IdeaEditor extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jSplitPane1)
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -256,7 +283,17 @@ public class IdeaEditor extends javax.swing.JFrame {
 
     private void mEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEditActionPerformed
         // TODO add your handling code here:
+        jSplitPane1.setDividerLocation(-1);
+        jMenu2.remove(mEdit);
+        jMenu2.add(mCloseEdit);
     }//GEN-LAST:event_mEditActionPerformed
+
+    private void mCloseEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCloseEditActionPerformed
+        // TODO add your handling code here:
+        jSplitPane1.setDividerLocation(0);
+        jMenu2.add(mEdit);
+        jMenu2.remove(mCloseEdit);
+    }//GEN-LAST:event_mCloseEditActionPerformed
     
 
 
@@ -265,9 +302,11 @@ public class IdeaEditor extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenuItem mClose;
+    private javax.swing.JMenuItem mCloseEdit;
     private javax.swing.JMenuItem mEdit;
     private javax.swing.JMenuItem mLoad;
     private javax.swing.JMenuItem mSave;
