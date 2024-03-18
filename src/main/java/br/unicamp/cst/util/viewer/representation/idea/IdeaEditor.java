@@ -11,7 +11,10 @@
 package br.unicamp.cst.util.viewer.representation.idea;
 
 import br.unicamp.cst.representation.idea.Idea;
+import br.unicamp.cst.util.viewer.TreeElement;
 
+import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.List;
 
 import java.awt.BorderLayout;
@@ -82,6 +85,7 @@ public class IdeaEditor extends javax.swing.JFrame {
         zoom_in = new javax.swing.JButton();
         zoom_out = new javax.swing.JButton();
         search = new javax.swing.JButton();
+        jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -89,6 +93,7 @@ public class IdeaEditor extends javax.swing.JFrame {
         mSave = new javax.swing.JMenuItem();
         mClose = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        mEdit = new javax.swing.JMenuItem();
 
         jToolBar1.setRollover(true);
 
@@ -129,12 +134,14 @@ public class IdeaEditor extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 310, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 420, Short.MAX_VALUE)
+            .addGap(0, 477, Short.MAX_VALUE)
         );
+
+        jSplitPane1.setRightComponent(jPanel1);
 
         jMenu1.setText("File");
 
@@ -165,6 +172,15 @@ public class IdeaEditor extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
+
+        mEdit.setText("Open Editor");
+        mEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mEditActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mEdit);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -174,14 +190,18 @@ public class IdeaEditor extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSplitPane1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -197,6 +217,16 @@ public class IdeaEditor extends javax.swing.JFrame {
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
         // TODO add your handling code here:
+        String searchString = JOptionPane.showInputDialog("Search String: ");
+        System.out.println(searchString);
+        List<DefaultMutableTreeNode> s = wmp.find(wmp.getRootTreeNode(), searchString);
+        for (DefaultMutableTreeNode ss : s){
+            ((TreeElement) ss.getUserObject()).setColor(TreeElement.NODE_CHANGE);
+            System.out.print(((Idea)((TreeElement) ss.getUserObject()).getElement()).getName() + " - ");
+            System.out.println(((Idea)((TreeElement) ss.getUserObject()).getElement()).getValue());
+        }
+        wmp.repaint();
+        //wmp.updateTree();
 
     }//GEN-LAST:event_searchActionPerformed
 
@@ -223,6 +253,10 @@ public class IdeaEditor extends javax.swing.JFrame {
 //        mv.wmpanel.updateTree();
 //        mv.setPhaseIndication();
     }//GEN-LAST:event_mLoadActionPerformed
+
+    private void mEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEditActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_mEditActionPerformed
     
 
 
@@ -231,8 +265,10 @@ public class IdeaEditor extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenuItem mClose;
+    private javax.swing.JMenuItem mEdit;
     private javax.swing.JMenuItem mLoad;
     private javax.swing.JMenuItem mSave;
     private javax.swing.JButton search;

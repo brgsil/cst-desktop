@@ -15,6 +15,8 @@ import br.unicamp.cst.util.viewer.TreeElement;
 import br.unicamp.cst.util.viewer.MindRenderer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.jsoar.kernel.memory.Wme;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -62,7 +64,7 @@ public class IdeaPanel extends javax.swing.JPanel {
         else root = new Idea("RootIdea","",0);
         initComponents();
         jsp.setViewportView(jtree);
-        rootlink = new IdeaTreeNode(root.getName(),root.getValue().toString(),TreeElement.NODE_NORMAL,root,TreeElement.ICON_MIND);
+        rootlink = new IdeaTreeNode(root.getName(),String.valueOf(root.getValue()),TreeElement.NODE_NORMAL,root,TreeElement.ICON_MIND);
         ExpandStateLibrary.set(rootlink,true);
         DefaultTreeModel tm = new DefaultTreeModel(rootlink);
         jtree.setModel(tm);
@@ -602,12 +604,21 @@ public class IdeaPanel extends javax.swing.JPanel {
         return results;
     }
     
-    
-    private List<DefaultMutableTreeNode> find(DefaultMutableTreeNode root, String s) {    
+
+    private List<Object> searchSubIdeas(Idea idea, String s){
+        List<Object> results = new ArrayList<>();
+        if (idea.getName().contains(s) || idea.getValue().toString().contains(s))
+            results.add(idea);
+        for (Idea subIdea : idea.getL()){
+            results.addAll(searchSubIdeas(subIdea, s));
+        }
+        return results;
+    }
+    public List<DefaultMutableTreeNode> find(DefaultMutableTreeNode root, String s) {
         
         if (s != null) {
-            //Wme aoRoot = (Wme) ((TreeElement) root.getUserObject()).getElement();
-            List<Object> results = null;//aoRoot.search(s);
+            Idea aoRoot = (Idea) ((TreeElement) root.getUserObject()).getElement();
+            List<Object> results = searchSubIdeas(aoRoot, s);
             List<DefaultMutableTreeNode> treeResults = new ArrayList<>();
             for (Object result : results) {
                 if (((TreeElement) root.getUserObject()).getElement() == result) {
