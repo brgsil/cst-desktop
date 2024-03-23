@@ -11,10 +11,14 @@
 package br.unicamp.cst.util.viewer.representation.idea;
 
 import br.unicamp.cst.representation.idea.Idea;
+import br.unicamp.cst.util.viewer.MindRenderer;
 import br.unicamp.cst.util.viewer.TreeElement;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import java.util.List;
 
 import java.awt.BorderLayout;
@@ -40,6 +44,13 @@ public class IdeaEditor extends javax.swing.JFrame {
     public IdeaEditor(Idea rootId, boolean editable) {
         initComponents();
         setTitle("Idea Editor");
+        if (!editable){
+            jSplitPane1.setDividerLocation(0);
+            jSplitPane1.setEnabled(false);
+        }
+
+        initEditTree();
+
         //root = rootId;
         wmp = new IdeaPanel(rootId, editable);
         //wmp.setOpaque(true); //content panes must be opaque
@@ -61,7 +72,39 @@ public class IdeaEditor extends javax.swing.JFrame {
             }
         });
     }
-    
+
+    private void initEditTree() {
+        Idea editIdea = new Idea("Edit");
+        IdeaTreeNode editTreeIdea = new IdeaTreeNode("Edit", "", TreeElement.NODE_NORMAL,editIdea,TreeElement.ICON_MIND);
+        editTreeIdea.addIdeaNode(new Idea("Episode","Existence", 4));
+        editTreeIdea.addIdeaNode(new Idea("Episode","Category", 11));
+        editTreeIdea.addIdeaNode(new Idea("Episode","Possibility", 14));
+        editTreeIdea.addIdeaNode(new Idea("TimeStep","", 8));
+        editTreeIdea.addIdeaNode(new Idea("Object","Existence", 0));
+        editTreeIdea.addIdeaNode(new Idea("Object","Category", 10));
+        editTreeIdea.addIdeaNode(new Idea("Object","Possibility", 13));
+        editTreeIdea.addIdeaNode(new Idea("Property","Existence", 1));
+        editTreeIdea.addIdeaNode(new Idea("Property","Category", 9));
+        editTreeIdea.addIdeaNode(new Idea("Property","Possibility", 12));
+        editTreeIdea.addIdeaNode(new Idea("QualityDimension","", 3));
+        editTreeIdea.addIdeaNode(new Idea("Action","Possibility", 15));
+        editTreeIdea.addIdeaNode(new Idea("Action","Existence", 16));
+        editTreeIdea.addIdeaNode(new Idea("Action","Category", 17));
+        editTreeIdea.addIdeaNode(new Idea("Goal","", 18));
+        editTreeIdea.addIdeaNode(new Idea("Link","Existence", 2));
+        editTreeIdea.addIdeaNode(new Idea("Composite","", 5));
+        editTreeIdea.addIdeaNode(new Idea("Aggregate","", 6));
+        editTreeIdea.addIdeaNode(new Idea("Configuration","", 7));
+        DefaultTreeModel tm = new DefaultTreeModel(editTreeIdea);
+        editTree.setModel(tm);
+        editTree.setCellRenderer(new MindRenderer(2));
+
+        editTree.setDragEnabled(true);
+        editTree.setDropMode(DropMode.ON_OR_INSERT);
+        editTree.setTransferHandler(new IdeaTreeTransferHandler(true));
+        editTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+    }
+
     public void addListener(IdeaEditorListener listener) {
         listeners.add(listener);
     }
@@ -81,7 +124,6 @@ public class IdeaEditor extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mCloseEdit = new javax.swing.JMenuItem();
         jToolBar1 = new javax.swing.JToolBar();
         zoom_in = new javax.swing.JButton();
         zoom_out = new javax.swing.JButton();
@@ -89,20 +131,14 @@ public class IdeaEditor extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        editTree = new javax.swing.JTree();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         mLoad = new javax.swing.JMenuItem();
         mSave = new javax.swing.JMenuItem();
         mClose = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        mEdit = new javax.swing.JMenuItem();
-
-        mCloseEdit.setText("Close Editor");
-        mCloseEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mCloseEditActionPerformed(evt);
-            }
-        });
 
         jToolBar1.setRollover(true);
 
@@ -139,6 +175,8 @@ public class IdeaEditor extends javax.swing.JFrame {
         });
         jToolBar1.add(search);
 
+        jSplitPane1.setOneTouchExpandable(true);
+
         jPanel1.setMinimumSize(new java.awt.Dimension(200, 0));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -154,18 +192,25 @@ public class IdeaEditor extends javax.swing.JFrame {
 
         jSplitPane1.setRightComponent(jPanel1);
 
-        jPanel2.setMinimumSize(new java.awt.Dimension(200, 100));
+        jPanel2.setMinimumSize(new java.awt.Dimension(150, 100));
         jPanel2.setPreferredSize(new java.awt.Dimension(100, 477));
+
+        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane1.setViewportView(editTree);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 477, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 471, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel2);
@@ -199,15 +244,6 @@ public class IdeaEditor extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
-
-        mEdit.setText("Open Editor");
-        mEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mEditActionPerformed(evt);
-            }
-        });
-        jMenu2.add(mEdit);
-
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -217,7 +253,7 @@ public class IdeaEditor extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                 .addContainerGap())
@@ -280,34 +316,20 @@ public class IdeaEditor extends javax.swing.JFrame {
 //        mv.wmpanel.updateTree();
 //        mv.setPhaseIndication();
     }//GEN-LAST:event_mLoadActionPerformed
-
-    private void mEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEditActionPerformed
-        // TODO add your handling code here:
-        jSplitPane1.setDividerLocation(-1);
-        jMenu2.remove(mEdit);
-        jMenu2.add(mCloseEdit);
-    }//GEN-LAST:event_mEditActionPerformed
-
-    private void mCloseEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mCloseEditActionPerformed
-        // TODO add your handling code here:
-        jSplitPane1.setDividerLocation(0);
-        jMenu2.add(mEdit);
-        jMenu2.remove(mCloseEdit);
-    }//GEN-LAST:event_mCloseEditActionPerformed
     
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTree editTree;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenuItem mClose;
-    private javax.swing.JMenuItem mCloseEdit;
-    private javax.swing.JMenuItem mEdit;
     private javax.swing.JMenuItem mLoad;
     private javax.swing.JMenuItem mSave;
     private javax.swing.JButton search;

@@ -35,15 +35,9 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
-import javax.swing.JFileChooser;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.event.TreeExpansionEvent;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 
 /**
  *
@@ -69,15 +63,20 @@ public class IdeaPanel extends javax.swing.JPanel {
         DefaultTreeModel tm = new DefaultTreeModel(rootlink);
         jtree.setModel(tm);
         jtree.setCellRenderer(new MindRenderer(2));
-        
+
+        jtree.setDragEnabled(true);
+        jtree.setDropMode(DropMode.ON_OR_INSERT);
+        jtree.setTransferHandler(new IdeaTreeTransferHandler(false));
+        jtree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
         MouseListener ml;
         ml = new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 int selRow = jtree.getRowForLocation(e.getX(), e.getY());
                 TreePath selPath = jtree.getPathForLocation(e.getX(), e.getY());
                 if(selRow != -1) {
+                    IdeaTreeNode tn = (IdeaTreeNode)selPath.getLastPathComponent();
                     if(e.getClickCount() == 1 && e.getButton() == 3) {
-                        IdeaTreeNode tn = (IdeaTreeNode)selPath.getLastPathComponent();
                         TreeElement te = (TreeElement)tn.getUserObject();
                         IdeaTreeNode parentnode = (IdeaTreeNode)tn.getParent();
                         TreeElement parent=null;
@@ -134,6 +133,8 @@ public class IdeaPanel extends javax.swing.JPanel {
                         popup.add(jm4);
                         popup.show(jtree, e.getX(), e.getY());
                         
+                    } else if (e.getClickCount() == 2 && e.getButton() == 1){
+                        editIdea(tn);
                     }
                 }
             }};
@@ -494,21 +495,21 @@ public class IdeaPanel extends javax.swing.JPanel {
         return(id);
     }
     
-    private void expandNode(JTree tree, IdeaTreeNode node) {
+    private static void expandNode(JTree tree, IdeaTreeNode node) {
         //System.out.println("Expanding node "+node.getTreeElement().getName()+" that has expand "+node.getTreeElement().getExpand());
         TreePath tp = new TreePath(node.getPath());
         tree.expandPath(tp);
         ExpandStateLibrary.set(node, true);
     }
     
-    private void collapseNode(JTree tree, IdeaTreeNode node) {
+    private static void collapseNode(JTree tree, IdeaTreeNode node) {
         //System.out.println("Collapsing node "+node.getTreeElement().getName()+" that has expand "+node.getTreeElement().getExpand());
         TreePath tp = new TreePath(node.getPath());
         tree.collapsePath(tp);
         ExpandStateLibrary.set(node, false);
     }
     
-    private void restoreExpansion(IdeaTreeNode wn, JTree tree) {
+    private static void restoreExpansion(IdeaTreeNode wn, JTree tree) {
         //if (wn.isExpanded()) expandNode(tree,wn);
         if (ExpandStateLibrary.get(wn)) expandNode(tree,wn);
         else collapseNode(tree,wn);
@@ -520,7 +521,7 @@ public class IdeaPanel extends javax.swing.JPanel {
         }
     }
     
-    private void restoreExpansion(JTree tree) { 
+    public static void restoreExpansion(JTree tree) {
         TreeModel tm = tree.getModel();
         IdeaTreeNode rootNode = (IdeaTreeNode)tm.getRoot();
         restoreExpansion(rootNode,tree);
