@@ -193,7 +193,11 @@ public class IdeaTreeNode extends DefaultMutableTreeNode {
             Collections.sort(this.children,comparator);
         }
     }
-    
+
+    public void addWithoutSorting(MutableTreeNode newChild){
+        super.add(newChild);
+    }
+
     @Override
     public void add(MutableTreeNode newChild)
     {

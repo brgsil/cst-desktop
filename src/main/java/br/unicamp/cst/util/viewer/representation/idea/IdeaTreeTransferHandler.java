@@ -30,6 +30,17 @@ public class IdeaTreeTransferHandler extends TransferHandler {
         if (isTemplate)
             return false;
 
+        try {
+            IdeaTreeNode source = (IdeaTreeNode) transferable.getTransferData(DataFlavor.stringFlavor);
+            TreePath dropPath = ((JTree) support.getComponent()).getDropLocation().getPath();
+            if (dropPath != null) {
+                IdeaTreeNode target = (IdeaTreeNode) dropPath.getLastPathComponent();
+                if (source.equals(target))
+                    return false;
+            }
+        } catch (NullPointerException | IOException | UnsupportedFlavorException e) {
+        }
+
         support.setShowDropLocation(true);
 
         return true;
@@ -61,7 +72,6 @@ public class IdeaTreeTransferHandler extends TransferHandler {
     public boolean importData(TransferHandler.TransferSupport support) {
         JTree editTree = (JTree) support.getComponent();
         TreePath dropLocation = editTree.getDropLocation().getPath();
-        IdeaTreeNode root = (IdeaTreeNode) editTree.getModel().getRoot();
 
         try {
             IdeaTreeNode transferedNode = (IdeaTreeNode) transferable.getTransferData(DataFlavor.stringFlavor);
@@ -82,7 +92,10 @@ public class IdeaTreeTransferHandler extends TransferHandler {
             IdeaTreeNode newTreeNode = new IdeaTreeNode(newIdea);
             newTreeNode.representIdea(newIdea);
             IdeaTreeNode destNode = (IdeaTreeNode) dropLocation.getLastPathComponent();
-            destNode.add(newTreeNode);
+            if (editTree.getDropLocation().getChildIndex() >= 0)
+                destNode.insert(newTreeNode, editTree.getDropLocation().getChildIndex());
+            else
+                destNode.addWithoutSorting(newTreeNode);
             Idea destIdea = (Idea) destNode.getTreeElement().getElement();
             destIdea.add(newIdea);
             ExpandStateLibrary.set(destNode, true);

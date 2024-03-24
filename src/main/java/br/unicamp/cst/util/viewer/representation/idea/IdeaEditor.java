@@ -175,8 +175,6 @@ public class IdeaEditor extends javax.swing.JFrame {
         });
         jToolBar1.add(search);
 
-        jSplitPane1.setOneTouchExpandable(true);
-
         jPanel1.setMinimumSize(new java.awt.Dimension(200, 0));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -192,8 +190,9 @@ public class IdeaEditor extends javax.swing.JFrame {
 
         jSplitPane1.setRightComponent(jPanel1);
 
-        jPanel2.setMinimumSize(new java.awt.Dimension(150, 100));
-        jPanel2.setPreferredSize(new java.awt.Dimension(100, 477));
+        jPanel2.setMinimumSize(new java.awt.Dimension(190, 100));
+        jPanel2.setMaximumSize(new java.awt.Dimension(210, 100));
+        jPanel2.setPreferredSize(new java.awt.Dimension(190, 477));
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPane1.setViewportView(editTree);
